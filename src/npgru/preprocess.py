@@ -59,7 +59,7 @@ def load_dataset(data_dir: pathlib.Path) -> pd.DataFrame:
 
 
 def process_titles(dataset: pd.DataFrame) -> Iterable[str]:
-    return dataset["title"].str.lower().str.replace("[^a-z0-9 ]", "", regex=True).values
+    return dataset["title"].str.lower().str.replace("[^가-힣a-z0-9 ]", "", regex=True).values
 
 
 def is_valid_zip_file_downloaded(data_dir: pathlib.Path, zipfile_name: str) -> bool:
