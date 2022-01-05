@@ -1,0 +1,15 @@
+# Python
+venv/
+*cache*
+.ipynb_checkpoint
+
+# Project outputs
+data/
+logs/
+
+# Envfile
+.env
+
+# Manual
+.idea/
+.DS_Store
