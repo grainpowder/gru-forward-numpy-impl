@@ -3,7 +3,7 @@ import typer
 import util
 from npgru.preprocess import preprocess
 from npgru.train import train
-from npgru.test import test
+from npgru.evaluate import evaluate
 
 app = Typer()
 project_dir = util.get_project_dir()
@@ -27,10 +27,10 @@ def run_train(
     train(project_dir, logger, vocab_size, embed_dim, num_epochs, batch_size, num_predict)
 
 
-@app.command("test")
-def run_test():
-    logger = util.make_logger(project_dir, "test")
-
+@app.command("evaluate")
+def run_evaluate():
+    logger = util.make_logger(project_dir, "evaluate")
+    evaluate(project_dir, logger)
 
 
 if __name__ == '__main__':
