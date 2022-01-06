@@ -22,8 +22,8 @@ def test_process_titles():
         ],
         "target": [
             "how to write clean code in python",
-            " copy and  paste ",
-            "싸늘하다 가슴에 비수가 날아와 꽂힌다"
+            "copy and paste",
+            "싸 늘하다 가슴에 비수가 날아와 꽂힌다"
         ]
     })
     result = preprocess.process_titles(test_data)
