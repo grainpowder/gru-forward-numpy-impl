@@ -11,10 +11,10 @@ from dotenv import load_dotenv
 
 def preprocess(project_dir: pathlib.Path, logger: logging.Logger) -> None:
     load_dotenv()
+    data_dir = project_dir.joinpath("data")
+    model_dir = project_dir.joinpath("models")
 
     logger.info("Load dataset for preprocessing")
-    data_dir = project_dir.joinpath("data")
-    data_dir.mkdir(parents=True, exist_ok=True)
     dataset = load_dataset(data_dir)
 
     logger.info("Preprocess article titles")
@@ -38,7 +38,7 @@ def preprocess(project_dir: pathlib.Path, logger: logging.Logger) -> None:
     feed_dataset.to_csv(data_dir.joinpath("feed_data.csv"), index=False)
     eval_dataset.to_csv(data_dir.joinpath("eval_data.csv"), index=False)
     test_dataset.to_csv(data_dir.joinpath("test_data.csv"), index=False)
-    index_map.to_csv(data_dir.joinpath("index2category.csv"), index=False)
+    index_map.to_csv(model_dir.joinpath("index2category.csv"), index=False)
 
     logger.info("Save processed titles of feed data for tokenizer training")
     with open(data_dir.joinpath("processed_titles.txt"), "w") as file:

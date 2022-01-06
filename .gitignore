@@ -6,6 +6,7 @@ venv/
 # Project outputs
 data/
 logs/
+models/
 
 # Envfile
 .env
