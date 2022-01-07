@@ -26,17 +26,17 @@ def preprocess(project_dir: pathlib.Path, logger: logging.Logger) -> None:
     encoded_category = [category2index[category] for category in dataset["category"].values]
     processed_dataset = pd.DataFrame({"category": encoded_category, "title": processed_titles})
 
-    logger.info("Split dataset into feed, evaluation, test sets")
+    logger.info("Split dataset into feed, validation, test sets")
     np.random.seed(1234)
     test_dataset = processed_dataset.sample(frac=0.1, replace=False)
     train_dataset = processed_dataset.loc[~processed_dataset.index.isin(test_dataset.index)]
-    eval_dataset = train_dataset.sample(n=test_dataset.shape[0], replace=False)
-    feed_dataset = train_dataset.loc[~train_dataset.index.isin(eval_dataset.index)]
+    validation_dataset = train_dataset.sample(n=test_dataset.shape[0], replace=False)
+    feed_dataset = train_dataset.loc[~train_dataset.index.isin(validation_dataset.index)]
 
     logger.info("Save each of dataset and index map into data directory as csv format")
     index_map = pd.DataFrame(index2category.items(), columns=["index", "category"])
     feed_dataset.to_csv(data_dir.joinpath("feed_data.csv"), index=False)
-    eval_dataset.to_csv(data_dir.joinpath("eval_data.csv"), index=False)
+    validation_dataset.to_csv(data_dir.joinpath("validation_data.csv"), index=False)
     test_dataset.to_csv(data_dir.joinpath("test_data.csv"), index=False)
     index_map.to_csv(model_dir.joinpath("index2category.csv"), index=False)
 

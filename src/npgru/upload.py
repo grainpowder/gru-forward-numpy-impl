@@ -46,7 +46,7 @@ def upload(project_dir: pathlib.Path, logger: logging.Logger) -> None:
     zipped_data_name = os.environ.get("ZIPFILE_NAME")
     upload_to_s3(bucket_name, prefix, zipped_tokenizer_name, model_dir.joinpath(zipped_tokenizer_name))
     upload_to_s3(bucket_name, prefix, zipped_weights_name, model_dir.joinpath(zipped_weights_name))
-    upload_to_s3(bucket_name, prefix, zipped_data_name, model_dir.joinpath(zipped_data_name))
+    upload_to_s3(bucket_name, prefix, zipped_data_name, data_dir.joinpath(zipped_data_name))
 
 
 def extract_model_weights(model: keras.Sequential) -> Dict[str, np.array]:

@@ -23,10 +23,10 @@ def train(
     data_dir = project_dir.joinpath("data")
     model_dir = project_dir.joinpath("models")
 
-    logger.info("Training tokenizer under unigram assumption")
+    logger.info("Train tokenizer under unigram assumption")
     tokenizer = train_tokenizer(data_dir, model_dir, vocab_size)
 
-    logger.info("Training word embeddings using skip-gram algorithm")
+    logger.info("Train word embeddings using skip-gram algorithm")
     titles = []
     with open(data_dir.joinpath("processed_titles.txt"), "r") as file:
         for title in file:
@@ -34,11 +34,11 @@ def train(
     tokenized_titles = tokenize_to_array(tokenizer, titles)
     embeddings = train_embeddings(tokenized_titles, vocab_size, embed_dim)
 
-    logger.info("Initializing evaluation dataset and classification model")
+    logger.info("Initialize validation dataset and classification model")
     feed_data = pd.read_csv(data_dir.joinpath("feed_data.csv"))
     num_categories = feed_data["category"].max() + 1
-    eval_data = pd.read_csv(data_dir.joinpath("eval_data.csv"))
-    eval_dataset = initialize_dataset(tokenizer, eval_data, False, batch_size)
+    validation_data = pd.read_csv(data_dir.joinpath("validation_data.csv"))
+    validation_dataset = initialize_dataset(tokenizer, validation_data, False, batch_size)
     model = initialize_classifier(num_categories, embeddings)
 
     logger.info("Train classification model")
@@ -63,16 +63,16 @@ def train(
             if batch_index % verbose_unit == 0:
                 avg_batch_loss = np.mean(batch_losses)
                 logger.info(f"Batch [{batch_index:>3}/{num_batches}] | Average loss : {avg_batch_loss:.4f}")
-        logger.info(f"Finished training process for epoch {epoch_index + 1}")
+        logger.info(f"Finish training process for epoch {epoch_index + 1}")
 
         top_k_precision.reset_state()
-        for batch in eval_dataset:
+        for batch in validation_dataset:
             tensor_titles, tensor_categories = batch
             tensor_categories = tensor_categories[:, tf.newaxis]
             probabilities = model(tensor_titles)
             top_k_precision.update_state(tensor_categories, probabilities)
         calculated_metric = top_k_precision.result().numpy()
-        logger.info(f"Top-3-precision on evaluation dataset : {calculated_metric:.4f}")
+        logger.info(f"Top-3-precision on validation dataset : {calculated_metric:.4f}")
 
     logger.info("Save trained classifier")
     classifier_dir = model_dir.joinpath("tensorflow")

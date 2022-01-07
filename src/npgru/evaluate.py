@@ -95,9 +95,9 @@ def evaluate(project_dir: pathlib.Path, logger: logging.Logger) -> None:
 
     num_titles = test_data.shape[0]
     result_corresponds = comparison_result["result_corresponds"].sum() == num_titles
-    logger.info(f"Two prediction results on every one of {num_titles:,} titles correspond : {result_corresponds}")
+    logger.info(f"Two prediction results on every one of {num_titles:,} titles are same : {result_corresponds}")
 
-    logger.info(f"However, inference speed of numpy implementation is 3~10 times faster than original tensorflow model")
+    logger.info(f"However, inference speed of numpy implementation is several times faster than original model")
     elapse_time_result = comparison_result[["title_length", "tf_elapse_ms", "np_elapse_ms"]].\
         groupby("title_length").aggregate({"tf_elapse_ms": np.median, "np_elapse_ms": np.median}).\
         reset_index().values
