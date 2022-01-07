@@ -4,6 +4,7 @@ import util
 from npgru.preprocess import preprocess
 from npgru.train import train
 from npgru.evaluate import evaluate
+from npgru.upload import upload
 
 app = Typer()
 project_dir = util.get_project_dir()
@@ -31,6 +32,12 @@ def run_train(
 def run_evaluate():
     logger = util.make_logger(project_dir, "evaluate")
     evaluate(project_dir, logger)
+
+
+@app.command("upload")
+def run_upload():
+    logger = util.make_logger(project_dir, "upload")
+    upload(project_dir, logger)
 
 
 if __name__ == '__main__':
