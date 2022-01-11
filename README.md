@@ -23,7 +23,15 @@ export PYTHONPATH=$PWD/src
 
 ### on docker
 
-To be continued...
+```shell
+cd gru-forward-numpy-impl
+docker build -t npgru_image:0.1.1 .
+docker run \
+  -i -t \
+  --rm \
+  --name npgru \
+  npgru_image:0.1.1
+```
 
 # Commentary
 
@@ -31,15 +39,12 @@ To be continued...
 
 ## Required Environment Variables
 
-* FILE_NAME : 다운받은 zip파일에 담긴 파일의 이름(확장자 포함). 
-    * 혹시 파일명이 변경될 수도 있어서 파일명 하드코딩을 피했음
-* ZIPFILE_NAME : zip파일의 이름(확장자 포함)
-    * 위와 동일한 이유로 파일명을 환경변수를 통해 별도로 입력받게 함 
+아래와 같은 환경변수를 정의한 `.env`파일을 `src`폴더에 저장한다. 
 
-```shell
-export FILE_NAME=medium_post_titles.csv
-export ZIPFILE_NAME=archive.zip
-```
+* FILE_NAME : 다운받은 zip파일에 담긴 파일의 이름(확장자 포함). 
+    * 현재는 `medium_post_titles.csv`지만, 혹시 파일명이 변경될 수도 있어서 파일명 하드코딩을 피했음
+* ZIPFILE_NAME : zip파일의 이름(확장자 포함)
+    * 현재는 `archive.zip`지만, 위와 같은 이유로 파일명을 환경변수를 통해 별도로 입력받게 함 
 
 ## Preprocess
 
@@ -59,7 +64,12 @@ python src/npgru/main.py preprocess
 * num_predict : top-k-precision의 k(3)
 
 ```shell
-python src/npgru/main.py train --vocab-size=15000 --num-epochs=3
+python src/npgru/main.py train \
+  --vocab-size=15000 \
+  --embed-dim=128 \
+  --num-epochs=3 \
+  --batch-size=128 \
+  --num-predict=3
 ```
 
 ## Evaluate
@@ -84,7 +94,7 @@ Length | tf elapse(ms) | np elapse(ms)
 
 ## Upload (optional)
 
-머신에서 동기적으로 실험을 진행해서 얻은 결과만으로는 서빙 환경에서도 `numpy`로 재구현한 클래스가 더 우수하다고 단정지을 수는 없다. 직접 API를 만들어서 실제 서빙환경에서 이 둘을 비교해야 완전한 비교가 마무리된다. 이를 위해서는 적합시킨 모델을 별도의 저장소에 업로드하는 프로세스가 필요하다. 이 데모에서는 AWS S3 저장소에 결과 파일들을 업로드하는데, 이를 위해서는 아래의 환경변수를 정의해야 한다.
+머신에서 동기적으로 실험을 진행해서 얻은 결과만으로는 서빙 환경에서도 `numpy`로 재구현한 클래스가 더 우수하다고 단정지을 수는 없다. 직접 API를 만들어서 실제 서빙환경에서 이 둘을 비교해야 완전한 비교가 마무리된다. 이를 위해서는 적합시킨 모델을 별도의 저장소에 업로드하는 프로세스가 필요하다. 이 데모에서는 AWS S3 저장소에 결과 파일들을 업로드하는데, 이를 위해서는 아래의 환경변수를 `.env`파일에 추가한다.
 
 * AWS_ACCESS_KEY_ID : AWS 액세스 키 ID
 * AWS_SECRET_ACCESS_KEY :  AWS 액세스 키 비밀번호
