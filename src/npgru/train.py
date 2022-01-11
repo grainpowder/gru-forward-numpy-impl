@@ -8,7 +8,6 @@ import sentencepiece as spm
 import tensorflow as tf
 import tensorflow.keras as keras
 from gensim.models import Word2Vec
-import shutil
 
 
 def train(
@@ -78,7 +77,6 @@ def train(
     classifier_dir = model_dir.joinpath("tensorflow")
     classifier_dir.mkdir(parents=True, exist_ok=True)
     keras.models.save_model(model, str(classifier_dir))
-    shutil.make_archive(classifier_dir, "zip", classifier_dir)
 
 
 def train_tokenizer(data_dir: pathlib.Path, model_dir: pathlib.Path, vocab_size: int) -> spm.SentencePieceProcessor:

@@ -10,7 +10,7 @@ def get_project_dir() -> pathlib.Path:
 
     :return: pathlib.Path instance
     """
-    root_dir = [path for path in sys.path if path.endswith("gru-forward-numpy-impl/src")]
+    root_dir = [path for path in sys.path if path.endswith("src")]
     try:
         return pathlib.Path(root_dir[0]).parent
     except IndexError:

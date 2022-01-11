@@ -16,6 +16,7 @@ def upload(project_dir: pathlib.Path, logger: logging.Logger) -> None:
     load_dotenv()
     model_dir = project_dir.joinpath("models")
     data_dir = project_dir.joinpath("data")
+    classifier_dir = model_dir.joinpath("tensorflow")
 
     logger.info("Load model to extract weights")
     model = keras.models.load_model(filepath=str(model_dir.joinpath("tensorflow")))
@@ -30,7 +31,8 @@ def upload(project_dir: pathlib.Path, logger: logging.Logger) -> None:
         weight = weights[weight_name]
         pd.DataFrame(weight).to_csv(weight_dir.joinpath(f"{weight_name}.csv"), index=False, header=False)
 
-    logger.info("Zip weight directory and tokenizer file")
+    logger.info("Zip tensorflow model, weight directory and tokenizer file")
+    shutil.make_archive(classifier_dir, "zip", classifier_dir)
     shutil.make_archive(weight_dir, "zip", weight_dir)
     tokenizer_name = "tokenizer.model"
     source = model_dir.joinpath(tokenizer_name)
@@ -42,8 +44,10 @@ def upload(project_dir: pathlib.Path, logger: logging.Logger) -> None:
     bucket_name = os.environ.get("S3_BUCKET_NAME")
     prefix = "gru-forward-numpy"
     zipped_tokenizer_name = tokenizer_name + ".gz"
+    zipped_classifier_name = "tensorflow.zip"
     zipped_weights_name = "weights.zip"
     zipped_data_name = os.environ.get("ZIPFILE_NAME")
+    upload_to_s3(bucket_name, prefix, zipped_classifier_name, model_dir.joinpath(zipped_classifier_name))
     upload_to_s3(bucket_name, prefix, zipped_tokenizer_name, model_dir.joinpath(zipped_tokenizer_name))
     upload_to_s3(bucket_name, prefix, zipped_weights_name, model_dir.joinpath(zipped_weights_name))
     upload_to_s3(bucket_name, prefix, zipped_data_name, data_dir.joinpath(zipped_data_name))

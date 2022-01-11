@@ -22,7 +22,7 @@ def run_train(
         embed_dim: int = typer.Option(128, "-d", "--embed-dim"),
         num_epochs: int = typer.Option(3, "-e", "--num-epochs"),
         batch_size: int = typer.Option(128, "-b", "--batch-size"),
-        num_predict: int = typer.Option(3, "-k", "--top-k-predict"),
+        num_predict: int = typer.Option(3, "-k", "--num-predict"),
 ):
     logger = util.make_logger(project_dir, "train")
     train(project_dir, logger, vocab_size, embed_dim, num_epochs, batch_size, num_predict)
